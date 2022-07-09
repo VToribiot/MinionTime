@@ -2,36 +2,52 @@ import os
 import shutil
 import subprocess
 import sys
-from tkinter import *
-from tkinter.ttk import *
 import importlib.util
 import time
+import PySimpleGUI as sg
 
-window = Tk()
+spec = importlib.util.find_spec("PySimpleGUI")
+if spec is None:
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "PySimpleGUI"])
 
-labelframe = LabelFrame(window)
-labelframe.pack(fill="both", expand="yes")
-Label(labelframe, text="Pik tis minion veela", font="Roboto 40").pack()
+def test():
+    import threading
+    sg.theme('SystemDefaultForReal')
+    layout = [[sg.Text('Testing progress bar:')],
+              [sg.ProgressBar(max_value=10, orientation='h', size=(20, 20), key='progress_1')]]
 
-percent = StringVar()
-folder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
+    main_window = sg.Window('Test', layout, finalize=True)
+    current_value = 0
+    main_window['progress_1'].update(current_value)
 
+    threading.Thread(target=another_function,
+                     args=(main_window, ),
+                     daemon=True).start()
 
-def start():
+    while True:
+        window, event, values = sg.read_all_windows()
+        if event == 'Exit':
+            break
+        if event.startswith('update_'):
+            print(f'event: {event}, value: {values[event]}')
+            key_to_update = event[len('update_'):]
+            window[key_to_update].update(values[event])
+            window.refresh()
+            continue
+        # process any other events ...
+    window.close()
+
+def another_function(window):
+    folder = [1, 2, 3, 4, 5, 6, 7]
     countFiles = len(folder)
     for i in range(countFiles + 1):
         time.sleep(0.5)
-        bar['value'] = (i / countFiles) * 100
-        percent.set(str(int((i / countFiles) * 100)) + "%")
-        window.update_idletasks()
+        current_value = int((i / countFiles) * 10)
+        window.write_event_value('update_progress_1', current_value)
+    time.sleep(2)
+    window.write_event_value('Exit', '')
 
 
-bar = Progressbar(window, orient=HORIZONTAL, length=750)
-bar.pack(pady=10)
-percentLabel = Label(window, textvariable=percent).pack()
-
-start()
-window.mainloop()
 folder = os.path.dirname(os.path.abspath(__file__))
 for filename in os.listdir(folder):
     file_path = os.path.join(folder, filename)
