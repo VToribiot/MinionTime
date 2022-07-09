@@ -7,18 +7,11 @@ from tkinter.ttk import *
 import importlib.util
 import time
 
-
-def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-
-spec = importlib.util.find_spec("PySimpleGUI")
-if spec is None:
-    install("PySimpleGUI")
-
 window = Tk()
 
-Label(window, text="Pik tis minion veela")
+labelframe = LabelFrame(window)
+labelframe.pack(fill="both", expand="yes")
+Label(labelframe, text="Pik tis minion veela", font="Roboto 40").pack()
 
 percent = StringVar()
 folder = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
