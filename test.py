@@ -1,12 +1,35 @@
-import PySimpleGUI as sg
+import requests
+from io import BytesIO
 
-layout = [ [sg.Text('My layout', key='-TEXT-')],
-           [sg.Button('Read')]]
+import PySimpleGUIQt as sg
+import requests
 
-window = sg.Window('My new window', layout)
 
-while True:             # Event Loop
+def image_to_data(im):
+    """
+    Image object to bytes object.
+    : Parameters
+      im - Image object
+    : Return
+      bytes object.
+    """
+    with BytesIO() as output:
+        im.save(output, format="PNG")
+        data = output.getvalue()
+    return data
+
+
+url = "https://upload.wikimedia.org/wikipedia/commons/d/d9/Test.png"
+response = requests.get(url, stream=True)
+response.raw.decode_content = True
+# img = ImageQt.Image.open(response.raw)
+# data = image_to_data(img)
+img_box = sg.Image(data=response.raw.read())
+
+window = sg.Window('', [[img_box]])
+while True:
     event, values = window.read()
-    if event == sg.WIN_CLOSED:
+    if event is None:
         break
-    window['-TEXT-'].update('My new text value')
+window.close()
+
