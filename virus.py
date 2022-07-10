@@ -14,7 +14,7 @@ folder = os.path.dirname(os.path.abspath(__file__))
 
 sg.theme('SystemDefaultForReal')
 layout = [[sg.Text('Minion Time', font="Roboto, 50")],
-          [sg.Image(f"{folder}\\minion.png")],
+          [sg.Image(f"{folder}/minion.png")],
           [sg.Text('Sad nomba:', font="Roboto, 16"), sg.Text('', key='-TEXT-', font="Roboto, 16")],
           [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progressbar')]]
 
