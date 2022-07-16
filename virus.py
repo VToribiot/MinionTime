@@ -4,12 +4,13 @@ import subprocess
 import sys
 import importlib.util
 import time
-import PySimpleGUI as sg
 import platform
 
 spec = importlib.util.find_spec("PySimpleGUI")
 if spec is None:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "PySimpleGUI"])
+
+import PySimpleGUI as sg
 
 folder = os.path.dirname(os.path.abspath(__file__))
 if platform.system() == "Windows":
