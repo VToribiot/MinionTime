@@ -8,19 +8,19 @@ import platform
 
 spec = importlib.util.find_spec("PySimpleGUI")
 if spec is None:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "PySimpleGUI"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "PySimpleGUIQt"])
 
-import PySimpleGUI as sg
+import PySimpleGUIQt as sg
 
 folder = os.path.dirname(os.path.abspath(__file__))
 if platform.system() == "Windows":
-    img_path = folder + "\\minion.png"
+    img_path = folder + "/minion.png"
 elif platform.system() == "Linux":
-    img_path = folder + "\\minion.png"
+    img_path = folder + "/minion.png"
 
 sg.theme('SystemDefaultForReal')
 layout = [[sg.Text('Minion Time', font="Roboto, 50")],
-          [sg.Image(f"{img_path}")],
+          [sg.Image(f'{folder}/minion.png')],
           [sg.Text('Sad nomba:', font="Roboto, 16"), sg.Text('', key='-TEXT-', font="Roboto, 16")],
           [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progressbar')]]
 
