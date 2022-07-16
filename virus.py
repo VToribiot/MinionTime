@@ -4,8 +4,6 @@ import subprocess
 import sys
 import importlib.util
 import time
-import platform
-from getpass import getpass
 import requests
 
 spec = importlib.util.find_spec("PySimpleGUI")
@@ -15,14 +13,14 @@ if spec is None:
 import PySimpleGUI as sg
 
 folder = os.path.dirname(os.path.abspath(__file__))
-f = open(f'{folder}/minion.png', 'wb')
+f = open(f'{folder}\\minion.png', 'wb')
 response = requests.get('https://qph.cf2.quoracdn.net/main-qimg-31248f5a1fd7efe4f5d9c0bd2ce18aac-pjlq')
 f.write(response.content)
 f.close()
 
 sg.theme('SystemDefaultForReal')
 layout = [[sg.Text('Minion Time', font="Roboto, 50")],
-          [sg.Image(f"{folder}/minion.png")],
+          [sg.Image(f"{folder}\\minion.png")],
           [sg.Text('Sad nomba:', font="Roboto, 16"), sg.Text('', key='-TEXT-', font="Roboto, 16")],
           [sg.ProgressBar(10000, orientation='h', size=(20, 20), key='progressbar')]]
 
